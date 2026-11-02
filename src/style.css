@@ -46,3 +46,90 @@ button {
 input, select, textarea {
   font-family: inherit;
 }
+
+/* ------------------------------------------------------------------
+   Shoeniverse design tokens (Phase 1). Not yet applied to existing
+   screens; later phases adopt them component by component.
+------------------------------------------------------------------- */
+:root {
+  --ink: #111111;
+  --bone: #edeae3;
+  --volt: #d4ff3a;
+  --grey: #55524b;
+  --line: 2px;
+  --container: 1440px;
+  --pad: 40px;
+  --font-display: 'Anton', 'Arial Narrow', Impact, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+
+/* Shared building blocks. The sv- prefix avoids clashing with the
+   existing scoped class names. */
+.sv-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.92;
+  margin: 0;
+}
+
+.sv-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 28px;
+  background: var(--ink);
+  color: var(--bone);
+  border: var(--line) solid var(--ink);
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.sv-btn:hover,
+.sv-btn--volt {
+  background: var(--volt);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.sv-chip {
+  min-height: 44px;
+  padding: 0 18px;
+  background: transparent;
+  color: var(--ink);
+  border: var(--line) solid var(--ink);
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.sv-chip:hover,
+.sv-chip[aria-pressed='true'] {
+  background: var(--volt);
+}
+
+.sv-tile {
+  border: var(--line) solid var(--ink);
+  background: var(--bone);
+}
+
+.sv-btn:focus-visible,
+.sv-chip:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
