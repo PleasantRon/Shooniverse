@@ -10,19 +10,16 @@ const formData = ref({
   address: '',
   city: '',
   state: '',
-  zipCode: '',
-  cardNumber: '',
-  cardExpiry: '',
-  cardCVC: ''
+  zipCode: ''
 })
 
 // track order placement
 const orderPlaced = ref(false)
 
 // to calculate subtotal, tax, and total for the order summary
-const subtotal = computed(() => cart.getTotal())
-const tax = computed(() => subtotal.value * 0.1)
-const total = computed(() => subtotal.value + tax.value)
+const subtotal = computed(() => cart.getSubtotal())
+const tax = computed(() => cart.getTax())
+const total = computed(() => cart.getGrandTotal())
 
 // if any is false, submit button will be disabled. ensures that users fill in all required fields before placing an order.
 const isFormValid = computed(() => {
@@ -32,10 +29,7 @@ const isFormValid = computed(() => {
     formData.value.address &&
     formData.value.city &&
     formData.value.state &&
-    formData.value.zipCode &&
-    formData.value.cardNumber &&
-    formData.value.cardExpiry &&
-    formData.value.cardCVC
+    formData.value.zipCode
 })
 
 const handleSubmit = () => {
@@ -66,10 +60,7 @@ const resetForm = () => {
     address: '',
     city: '',
     state: '',
-    zipCode: '',
-    cardNumber: '',
-    cardExpiry: '',
-    cardCVC: ''
+    zipCode: ''
   }
   orderPlaced.value = false
 }
@@ -170,54 +161,18 @@ const goBack = () => {
           </div>
         </div>
 
-        <div class="form-section">
-          <h3>Payment Information</h3>
-          <div class="form-group full">
-            <label>Card Number</label>
-            <input 
-              v-model="formData.cardNumber" 
-              type="text"
-              placeholder="1234 5678 9012 3456"
-              maxlength="19"
-              required
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Expiry Date *</label>
-              <input 
-                v-model="formData.cardExpiry" 
-                type="text"
-                placeholder="MM/YY"
-                maxlength="5"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label>CVC</label>
-              <input 
-                v-model="formData.cardCVC" 
-                type="text"
-                placeholder="123"
-                maxlength="4"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
         <div class="form-actions">
           <button type="button" @click="goBack" class="back-btn">Back to Cart</button>
           <button type="submit" :disabled="!isFormValid" class="submit-btn">Place Order</button>
         </div>
+        <p class="demo-note">Demo checkout — no payment will be collected.</p>
       </form>
 
       <div class="order-summary">
         <h3>Order Summary</h3>
         <div class="summary-items">
-          <div v-for="item in cart.items" :key="item.id" class="summary-item">
-            <span>{{ item.name }} x {{ item.quantity }}</span>
+          <div v-for="item in cart.items" :key="item.lineId" class="summary-item">
+            <span>{{ item.name }} ({{ item.colourName }}, EU {{ item.size }}) x {{ item.quantity }}</span>
             <span>₦{{ (item.price * item.quantity).toFixed(2) }}</span>
           </div>
         </div>
@@ -327,6 +282,12 @@ const goBack = () => {
   margin-top: 30px;
   padding-top: 30px;
   border-top: 1px solid #e0e0e0;
+}
+
+.demo-note {
+  margin: 12px 0 0 0;
+  font-size: 13px;
+  color: #666;
 }
 
 .back-btn,

@@ -5,17 +5,19 @@ import { cart } from '../store.js'
 import { computed } from 'vue'
 
 // calculate total price of items in cart
-const total = computed(() => cart.getTotal())
+const subtotal = computed(() => cart.getSubtotal())
+const tax = computed(() => cart.getTax())
+const total = computed(() => cart.getGrandTotal())
 
-// tells store to remove item from cart based on productId
-const handleRemove = (productId) => {
-  cart.removeFromCart(productId)
+// tells store to remove one cart line (a product in a specific colour and size)
+const handleRemove = (lineId) => {
+  cart.removeFromCart(lineId)
 }
 
 // tells store to update quantity of a specific item in the cart. It finds the item by its productId and updates its quantity but only if the new quantity is greater than 0.
-const handleQuantityChange = (productId, event) => {
+const handleQuantityChange = (lineId, event) => {
   const quantity = parseInt(event.target.value)
-  cart.updateQuantity(productId, quantity)
+  cart.updateQuantity(lineId, quantity)
 }
 
 // tells app to show checkout view when user clicks proceed to check button. if empty it displays the alert
@@ -41,24 +43,25 @@ const handleCheckout = () => {
 
     <div v-else class="cart-content">
       <div class="cart-items">
-        <div v-for="item in cart.items" :key="item.id" class="cart-item">
+        <div v-for="item in cart.items" :key="item.lineId" class="cart-item">
           <div class="item-image">
             <img :src="item.image" :alt="item.name" />
           </div>
           <div class="item-details">
             <h3>{{ item.name }}</h3>
+            <p class="item-variant">{{ item.colourName }} · EU {{ item.size }}</p>
             <p class="item-price">₦{{ item.price.toFixed(2) }}</p>
           </div>
           <div class="item-quantity">
             <label>Qty:</label>
-            <select :value="item.quantity" @change="handleQuantityChange(item.id, $event)">
-              <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+            <select :value="item.quantity" @change="handleQuantityChange(item.lineId, $event)">
+              <option v-for="n in cart.getMaxQuantity(item)" :key="n" :value="n">{{ n }}</option>
             </select>
           </div>
           <div class="item-subtotal">
             <p>₦{{ (item.price * item.quantity).toFixed(2) }}</p>
           </div>
-          <button @click="handleRemove(item.id)" class="remove-btn">Remove</button>
+          <button @click="handleRemove(item.lineId)" class="remove-btn">Remove</button>
         </div>
       </div>
 
@@ -66,11 +69,11 @@ const handleCheckout = () => {
         <h3>Order Summary</h3>
         <div class="summary-row">
           <span>Subtotal:</span>
-          <span>₦{{ total.toFixed(2) }}</span>
+          <span>₦{{ subtotal.toFixed(2) }}</span>
         </div>
         <div class="summary-row">
           <span>Tax (10%):</span>
-          <span>₦{{ (total * 0.1).toFixed(2) }}</span>
+          <span>₦{{ tax.toFixed(2) }}</span>
         </div>
         <div class="summary-row shipping">
           <span>Shipping:</span>
@@ -78,7 +81,7 @@ const handleCheckout = () => {
         </div>
         <div class="summary-row total">
           <span>Total:</span>
-          <span>₦{{ (total * 1.1).toFixed(2) }}</span>
+          <span>₦{{ total.toFixed(2) }}</span>
         </div>
         <button @click="handleCheckout" class="checkout-btn">Proceed to Checkout</button>
       </div>
@@ -281,5 +284,11 @@ const handleCheckout = () => {
   .cart-summary {
     position: static;
   }
+}
+
+.item-variant {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #666;
 }
 </style>
