@@ -1,37 +1,148 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-const cats = [
-  { title: 'Walk Majestically', subtitle: 'High Fashion Shoes', emoji: '👑' },
-  { title: 'Run with Power', subtitle: 'Performance Runners', emoji: '⚡' },
-  { title: 'Comfort Casual', subtitle: 'Everyday Essentials', emoji: '☁️' }
-]
-const visible = ref([])
-onMounted(()=>cats.forEach((_,i)=>setTimeout(()=>visible.value.push(i), i*140)))
+import { siteCopy } from '../data/siteCopy.js'
+import { shopLocation } from '../router/locations.js'
+
+defineProps({
+  // [{ id, label, note?, description, count, product }]
+  categories: { type: Array, required: true }
+})
 </script>
 
 <template>
-  <section class="categories">
-    <div class="wrap">
-      <h2>Shop by Style</h2>
-      <div class="grid">
-        <div v-for="(c,i) in cats" :key="i" :class="{ show: visible.includes(i) }" class="cat">
-          <div class="emoji">{{c.emoji}}</div>
-          <h3>{{c.title}}</h3>
-          <p class="sub">{{c.subtitle}}</p>
-          <p class="desc">Explore curated picks to match the mood.</p>
-          <button class="link">Explore →</button>
-        </div>
+  <section id="categories" class="categories" aria-labelledby="categories-title">
+    <div class="sv-container">
+      <div class="head">
+        <h2 id="categories-title" class="sv-section-title">{{ siteCopy.categories.title }}</h2>
+        <p class="sv-section-text">{{ siteCopy.categories.text }}</p>
       </div>
+
+      <ul class="cards">
+        <li v-for="category in categories" :key="category.id">
+          <RouterLink :to="shopLocation({ category: category.id })" class="card">
+            <span class="card-media">
+              <img v-if="category.product" :src="category.product.image" alt="" loading="lazy" />
+            </span>
+            <span class="card-name">{{ category.label }}</span>
+            <span class="card-text">{{ category.description }}</span>
+            <span class="card-meta">
+              {{ category.count }} {{ category.count === 1 ? 'style' : 'styles' }}
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </span>
+          </RouterLink>
+        </li>
+      </ul>
     </div>
   </section>
 </template>
 
 <style scoped>
-.categories{padding:48px 20px;background:linear-gradient(180deg,#f6f7fb,#fff)}
-.wrap{max-width:1100px;margin:0 auto}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
-.cat{padding:22px;border-radius:12px;background:white;border:1px solid #eee;transform:translateY(22px);opacity:0;transition:all .45s}
-.cat.show{transform:none;opacity:1}
-.emoji{font-size:36px}
-.link{margin-top:12px;padding:8px 14px;border-radius:8px;border:1px solid #ddd;background:transparent}
+.categories {
+  padding: 72px 0;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  margin-bottom: 40px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  padding: 14px 14px 22px;
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  color: var(--text);
+  text-decoration: none;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.card:hover {
+  text-decoration: none;
+  box-shadow: var(--shadow);
+}
+
+.card-media {
+  display: block;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--panel);
+}
+
+.card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-name {
+  padding: 0 8px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.card-text {
+  padding: 0 8px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  padding: 14px 8px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translateY(-4px);
+  }
+
+  .card:hover .card-arrow {
+    transform: translateX(4px);
+  }
+
+  .card-arrow {
+    display: inline-block;
+    transition: transform 0.25s;
+  }
+}
+
+@media (max-width: 1100px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .categories {
+    padding: 48px 0;
+  }
+
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 </style>

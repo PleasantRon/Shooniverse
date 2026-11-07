@@ -1,6 +1,10 @@
 <script setup>
 import { cart } from '../store.js'
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { SITE_NAME } from '../config/site.js'
+
+const router = useRouter()
 
 const formData = ref({
   firstName: '',
@@ -39,14 +43,14 @@ const handleSubmit = () => {
   }
 
   // display when order is placed
-  alert('Thank you for walking the shoeniverse! Your shoes will be delivered soon.')
+  alert(`Thank you for walking the ${SITE_NAME}! Your shoes will be delivered soon.`)
   orderPlaced.value = true
   
   // Clear cart and reset
   setTimeout(() => {
     cart.clearCart()
     resetForm()
-    window.dispatchEvent(new CustomEvent('show-catalog'))
+    router.push({ name: 'shop' })
   }, 1000)
 }
 
@@ -65,9 +69,9 @@ const resetForm = () => {
   orderPlaced.value = false
 }
 
-// switch back to cart view if user clicks back button on checkout page
+// go back to the cart page if user clicks back button on checkout page
 const goBack = () => {
-  window.dispatchEvent(new CustomEvent('show-cart'))
+  router.push({ name: 'cart' })
 }
 </script>
 

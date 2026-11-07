@@ -1,36 +1,76 @@
 <script setup>
-// 
-import { ref, onMounted } from 'vue'
-// 
 const testimonials = [
-  { name:'Sarah', role:'Style Fan', text:'Lovely shoes, arrived fast!', avatar:'👩' },
-  { name:'Marcus', role:'Runner', text:'Great performance and fit.', avatar:'👨' },
-  { name:'Amara', role:'Blogger', text:'Beautiful craftsmanship.', avatar:'👩‍🦳' }
+  { name: 'Sarah', role: 'Style Fan', text: 'Lovely shoes, arrived fast!' },
+  { name: 'Marcus', role: 'Runner', text: 'Great performance and fit.' },
+  { name: 'Amara', role: 'Blogger', text: 'Beautiful craftsmanship.' }
 ]
-// Animate testimonials with staggered fade-in
-const visible=ref([])
-onMounted(()=>testimonials.forEach((_,i)=>setTimeout(()=>visible.value.push(i), i*110)))
 </script>
 
 <template>
-  <section class="testimonials">
-    <div class="wrap">
-      <h2>What Customers Say</h2>
-      <div class="grid">
-        <blockquote v-for="(t,i) in testimonials" :key="i" :class="{ show: visible.includes(i) }" class="quote">
-          <p>“{{t.text}}”</p>
-          <footer>{{t.avatar}} {{t.name}} — <small>{{t.role}}</small></footer>
-        </blockquote>
+  <section class="testimonials" aria-labelledby="testimonials-title">
+    <div class="sv-container">
+      <h2 id="testimonials-title" class="sv-section-title">What customers say</h2>
+      <div class="quotes">
+        <figure v-for="t in testimonials" :key="t.name" class="quote">
+          <blockquote class="quote-text">
+            <p>“{{ t.text }}”</p>
+          </blockquote>
+          <figcaption class="quote-by">
+            <strong>{{ t.name }}</strong> · {{ t.role }}
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-.testimonials{padding:48px 20px;background:#fff}
-.wrap{max-width:1100px;margin:0 auto}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-.quote{padding:20px;border-radius:12px;border:1px solid #6d3d3d;background:linear-gradient(180deg,#fff,#fbfbfb);transform:translateY(18px);opacity:0;transition:all .45s}
-.quote.show{transform:none;opacity:1}
-.quote footer{margin-top:12px;color:#666;font-size:13px}
+.testimonials {
+  padding: 72px 0;
+}
+
+.quotes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.quote {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.quote-text {
+  margin: 0;
+}
+
+.quote-text p {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.quote-by {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.quote-by strong {
+  color: var(--text);
+}
+
+@media (max-width: 860px) {
+  .quotes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 </style>

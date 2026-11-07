@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
+import { productLocation } from '../router/locations.js'
 // 
 const props = defineProps({
   product: {
@@ -17,11 +18,15 @@ const handleAddToCart = () => {
 
 <template>
   <div class="product-card">
-    <div class="product-image">
-      <img :src="product.image" :alt="product.name" />
-    </div>
+    <RouterLink :to="productLocation(product)" class="card-link">
+      <div class="product-image">
+        <img :src="product.image" :alt="product.name" />
+      </div>
+    </RouterLink>
     <div class="product-info">
-      <h3>{{ product.name }}</h3>
+      <h3>
+        <RouterLink :to="productLocation(product)" class="card-link">{{ product.name }}</RouterLink>
+      </h3>
       <p class="description">{{ product.description }}</p>
       <div class="product-footer">
         <span class="price">₦{{ product.price.toFixed(2) }}</span>
@@ -106,5 +111,19 @@ const handleAddToCart = () => {
 
 .add-btn:active {
   transform: scale(0.98);
+}
+
+.card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+h3 .card-link {
+  display: inline;
+}
+
+.card-link:hover {
+  text-decoration: underline;
 }
 </style>

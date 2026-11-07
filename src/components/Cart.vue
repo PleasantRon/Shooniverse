@@ -1,8 +1,11 @@
 <script setup>
 // bring cart components and state
 import { cart } from '../store.js'
+import { useRouter } from 'vue-router'
 // bring computed for calculating total price
 import { computed } from 'vue'
+
+const router = useRouter()
 
 // calculate total price of items in cart
 const subtotal = computed(() => cart.getSubtotal())
@@ -20,15 +23,14 @@ const handleQuantityChange = (lineId, event) => {
   cart.updateQuantity(lineId, quantity)
 }
 
-// tells app to show checkout view when user clicks proceed to check button. if empty it displays the alert
+// goes to the checkout page when user clicks proceed to checkout. if empty it displays the alert
 const handleCheckout = () => {
   if (cart.items.length === 0) {
     alert('Your cart is empty!')
     return
   }
   
-  // show checkout view
-  window.dispatchEvent(new CustomEvent('show-checkout'))
+  router.push({ name: 'checkout' })
 }
 </script>
 
@@ -39,6 +41,7 @@ const handleCheckout = () => {
     <div v-if="cart.items.length === 0" class="empty-cart">
       <p>Your cart is empty</p>
       <p class="empty-message">Start shopping to add items to your cart</p>
+      <RouterLink :to="{ name: 'shop' }" class="empty-link">Browse the shop</RouterLink>
     </div>
 
     <div v-else class="cart-content">
@@ -290,5 +293,12 @@ const handleCheckout = () => {
   margin: 4px 0 0 0;
   font-size: 14px;
   color: #666;
+}
+
+.empty-link {
+  display: inline-block;
+  margin-top: 16px;
+  color: #42b983;
+  font-weight: 600;
 }
 </style>

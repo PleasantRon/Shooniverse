@@ -1,5 +1,5 @@
 import { products } from './products.js'
-import { EU_SIZES } from './constants.js'
+import { EU_SIZES, CATEGORIES, COLLECTIONS } from './constants.js'
 
 // Read-only helpers over the product data. Components and the store use
 // these instead of digging through the data structure themselves.
@@ -43,3 +43,9 @@ export const makeLineId = (productId, colourId, size) => `${productId}:${colourI
 export const getFeatured = () => products.filter((p) => p.isFeatured)
 export const getNewArrivals = () =>
   products.filter((p) => p.isNew).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+
+// Display names for a product's category and collection ('' if unknown).
+export const getCategoryLabel = (product) =>
+  CATEGORIES.find((c) => c.id === product.category)?.label ?? ''
+export const getCollectionLabel = (product) =>
+  COLLECTIONS.find((c) => c.id === product.collection)?.label ?? ''

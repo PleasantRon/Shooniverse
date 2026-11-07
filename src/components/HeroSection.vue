@@ -1,35 +1,103 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-const visible = ref(false)
-// animate
-onMounted(() => { setTimeout(() => visible.value = true, 80) })
+import { siteCopy } from '../data/siteCopy.js'
+import { homeSectionLocation, shopLocation } from '../router/locations.js'
+import HeroOrbit from './HeroOrbit.vue'
+
+defineProps({
+  // the main shoe and its colourway (from the existing catalogue)
+  product: { type: Object, default: null },
+  variant: { type: Object, default: null },
+  // shoes orbiting the main shoe: [{ product, variant }]
+  satellites: { type: Array, default: () => [] },
+  eyebrow: { type: String, default: 'New arrivals' },
+  newArrivalsLocation: { type: Object, default: () => shopLocation() }
+})
 </script>
 
 <template>
-  <section class="hero" :class="{ 'visible': visible }">
-    <div class="hero-inner">
-      <div class="hero-text">
-        <h1>Step Into Style</h1>
-        <p>Discover premium shoes — we deliver nationwide.</p>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="sv-container hero-grid">
+      <div class="hero-copy">
+        <p class="sv-eyebrow">{{ eyebrow }}</p>
+        <h1 id="hero-title" class="hero-title">
+          {{ siteCopy.hero.titleLead }} <span class="hero-accent">{{ siteCopy.hero.titleAccent }}</span>
+        </h1>
+        <p class="hero-text">{{ siteCopy.hero.text }}</p>
         <div class="hero-actions">
-          <button @click="$emit('show-shop')" class="btn-primary">Shop Now</button>
-          <button class="btn-ghost">Learn More</button>
+          <RouterLink :to="newArrivalsLocation" class="sv-btn sv-btn--primary">Shop new arrivals</RouterLink>
+          <RouterLink :to="homeSectionLocation('categories')" class="sv-btn sv-btn--ghost">
+            Browse categories
+          </RouterLink>
         </div>
       </div>
-      <div class="hero-visual">👟</div>
+
+      <HeroOrbit v-if="product && variant" :product="product" :variant="variant" :satellites="satellites" />
     </div>
   </section>
 </template>
 
 <style scoped>
-.hero { padding: 56px 20px; background: linear-gradient(135deg,#fff 0%,#f7f7f9 100%); overflow:hidden; }
-.hero-inner { max-width:1200px; margin:0 auto; display:flex; gap:32px; align-items:center; justify-content:space-between; }
-.hero-text h1 { margin:0 0 12px 0; font-size:42px; font-weight:700; }
-.hero-text p { margin:0 0 18px 0; color:#555; }
-.hero-actions { display:flex; gap:12px }
-.btn-primary { background:#2f6bff; color:white; border:none; padding:12px 22px; border-radius:10px; cursor:pointer }
-.btn-ghost { background:transparent; border:1px solid #ccc; padding:10px 18px; border-radius:10px }
-.hero-visual { font-size:120px; opacity:0.95 }
-.hero.visible { transform: translateY(0); transition: all 700ms ease; }
-@media (max-width:768px){ .hero-inner{flex-direction:column; text-align:center}.hero-visual{font-size:72px} }
+.hero {
+  padding: 56px 0 72px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: 56px;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: clamp(48px, 7vw, 96px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+}
+
+.hero-accent {
+  color: var(--accent);
+}
+
+.hero-text {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 960px) {
+  .hero {
+    padding: 32px 0 56px;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-text {
+    font-size: 16px;
+  }
+
+  .hero-actions .sv-btn {
+    flex: 1 1 100%;
+  }
+}
 </style>
