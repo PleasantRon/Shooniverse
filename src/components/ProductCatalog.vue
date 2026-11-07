@@ -1,12 +1,13 @@
 <script setup>
 import { products as allProducts, cart } from '../store.js'
 import ProductCard from './ProductCard.vue'
+import { SITE_COLLECTION } from '../config/site.js'
 
 // Renders a titled grid of product cards. Pages decide which products to show.
 defineProps({
   products: { type: Array, default: () => allProducts },
   heading: { type: String, default: 'Featured Collection' },
-  subheading: { type: String, default: 'Explore our selection of premium shoes' }
+  subheading: { type: String, default: `Explore our selection of premium ${SITE_COLLECTION}` }
 })
 
 // add products

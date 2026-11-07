@@ -4,7 +4,7 @@
 // EU sizes offered across the store.
 export const EU_SIZES = [40, 41, 42, 43, 44, 45]
 
-// Sneaker categories. "court" covers basketball-inspired styles.
+// Product categories. "court" covers basketball-inspired styles.
 export const CATEGORIES = [
   { id: 'lifestyle', label: 'Lifestyle' },
   { id: 'running', label: 'Running' },

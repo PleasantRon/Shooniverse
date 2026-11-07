@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { CATEGORIES } from '../data/constants.js'
 import { siteCopy } from '../data/siteCopy.js'
+import { SITE_COLLECTION } from '../config/site.js'
 import { shopLocation } from '../router/locations.js'
 import HomeProductCard from './HomeProductCard.vue'
 
@@ -21,7 +22,7 @@ const visible = computed(() =>
   selected.value === 'all' ? props.products : props.products.filter((p) => p.category === selected.value)
 )
 
-const status = computed(() => `Showing ${visible.value.length} ${visible.value.length === 1 ? 'sneaker' : 'sneakers'}`)
+const status = computed(() => `Showing ${visible.value.length} ${visible.value.length === 1 ? 'pair' : 'pairs'}`)
 </script>
 
 <template>
@@ -55,7 +56,7 @@ const status = computed(() => `Showing ${visible.value.length} ${visible.value.l
       </ul>
 
       <div class="more">
-        <RouterLink :to="shopLocation()" class="sv-btn sv-btn--ghost">View all sneakers</RouterLink>
+        <RouterLink :to="shopLocation()" class="sv-btn sv-btn--ghost">View all {{ SITE_COLLECTION }}</RouterLink>
       </div>
     </div>
   </section>

@@ -28,7 +28,7 @@ const sourceFiles = [
 test('the site name is Shooniverse and lives in one config file', () => {
   assert.equal(SITE_NAME, 'Shooniverse')
   assert.ok(SITE_TAGLINE.length > 10 && SITE_DESCRIPTION.length > 20)
-  assert.equal(SITE_HOME_TITLE, 'Shooniverse \u00b7 Premium sneakers')
+  assert.equal(SITE_HOME_TITLE, 'Shooniverse \u00b7 Premium Shooz')
   assert.equal(pageTitle('Shop'), 'Shop \u00b7 Shooniverse')
   assert.equal(pageTitle(null), SITE_HOME_TITLE)
 })
@@ -86,11 +86,11 @@ test('applySiteMeta escapes characters that would break an HTML attribute', () =
 })
 
 // ---------- About section ----------
-test('About has one paragraph, now describing a footwear destination', () => {
+test('About has one paragraph, now describing a Shooz destination', () => {
   assert.equal(siteCopy.about.paragraphs.length, 1)
   assert.equal(
     siteCopy.about.paragraphs[0],
-    'Shooniverse is a footwear destination for every step. We bring together lifestyle, running, court and everyday pairs, chosen for how they look and how you live in them.'
+    'Shooniverse is a Shooz destination for every step. We bring together lifestyle, running, court and everyday pairs, chosen for how they look and how you live in them.'
   )
   const about = JSON.stringify(siteCopy.about)
   assert.doesNotMatch(about, /sneaker destination|Every pair is available|EU sizes 40 to 45/)

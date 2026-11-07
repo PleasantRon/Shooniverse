@@ -99,7 +99,7 @@ test('cart contents survive "navigating" between routes (the store is not tied t
 
 // ---------- titles ----------
 test('tab titles: home, static pages, known and unknown products', () => {
-  assert.equal(routeTitle({ name: 'home', meta: { title: null } }), `${SITE_NAME} · Premium sneakers`)
+  assert.equal(routeTitle({ name: 'home', meta: { title: null } }), `${SITE_NAME} · Premium Shooz`)
   assert.equal(routeTitle({ name: 'shop', meta: { title: 'Shop' } }), `Shop · ${SITE_NAME}`)
   assert.equal(routeTitle({ name: 'product', params: { slug: 'meridian-01' }, meta: {} }), `Meridian 01 · ${SITE_NAME}`)
   assert.equal(routeTitle({ name: 'product', params: { slug: 'zzz' }, meta: {} }), `Shoe not found · ${SITE_NAME}`)

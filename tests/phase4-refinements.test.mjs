@@ -9,7 +9,7 @@ import { products } from '../src/store.js'
 test('footer tagline is updated', () => {
   const footer = read('src/components/SiteFooter.vue')
   const config = read('src/config/site.js')
-  assert.ok(config.includes('A sneaker destination for every step.')) // the tagline lives in the site config
+  assert.match(config, /SITE_TAGLINE = `A \$\{SITE_COLLECTION\} destination for every step\.`/) // the tagline lives in the site config
   assert.match(footer, /siteCopy\.tagline/) // the footer shows it
   assert.doesNotMatch(footer + config, /If at all|An e-commerce store/)
   assert.match(footer, /<footer class="footer"/)

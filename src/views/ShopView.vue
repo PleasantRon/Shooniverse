@@ -1,11 +1,11 @@
 <script setup>
 import ProductCatalog from '../components/ProductCatalog.vue'
-import { SITE_NAME } from '../config/site.js'
+import { SITE_NAME, SITE_COLLECTION } from '../config/site.js'
 </script>
 
 <template>
   <div class="page">
-    <ProductCatalog heading="All Sneakers" :subheading="`Every pair in the ${SITE_NAME} catalogue`" />
+    <ProductCatalog :heading="`All ${SITE_COLLECTION}`" :subheading="`Every pair in the ${SITE_NAME} catalogue`" />
   </div>
 </template>
 

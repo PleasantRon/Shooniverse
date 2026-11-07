@@ -1,7 +1,7 @@
 <script setup>
 import { CATEGORIES } from '../data/constants.js'
 import { siteCopy } from '../data/siteCopy.js'
-import { SITE_NAME } from '../config/site.js'
+import { SITE_NAME, SITE_COLLECTION } from '../config/site.js'
 import { homeLocation, homeSectionLocation, shopLocation, cartLocation } from '../router/locations.js'
 import BrandLink from './BrandLink.vue'
 
@@ -20,7 +20,7 @@ const year = new Date().getFullYear()
         <nav class="footer-col" aria-labelledby="footer-shop">
           <h2 id="footer-shop" class="footer-heading">Shop</h2>
           <ul>
-            <li><RouterLink :to="shopLocation()">All sneakers</RouterLink></li>
+            <li><RouterLink :to="shopLocation()">All {{ SITE_COLLECTION }}</RouterLink></li>
             <li><RouterLink :to="shopLocation({ collection: 'drop-07' })">New arrivals</RouterLink></li>
             <li v-for="category in CATEGORIES" :key="category.id">
               <RouterLink :to="shopLocation({ category: category.id })">{{ category.label }}</RouterLink>

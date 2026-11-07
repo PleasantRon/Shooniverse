@@ -2,7 +2,7 @@
 // the components only display it. Keep claims limited to what the shop
 // actually does today.
 import { CATEGORIES } from './constants.js'
-import { SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION } from '../config/site.js'
+import { SITE_NAME, SITE_COLLECTION, SITE_TAGLINE, SITE_DESCRIPTION } from '../config/site.js'
 
 export const siteCopy = {
   tagline: SITE_TAGLINE,
@@ -11,7 +11,7 @@ export const siteCopy = {
   hero: {
     titleLead: 'Walk your own',
     titleAccent: 'orbit.',
-    text: 'Premium sneakers for every kind of move. Lifestyle, running, court and everyday styles, delivered nationwide.'
+    text: `Premium ${SITE_COLLECTION} for every kind of move. Lifestyle, running, court and everyday styles, delivered nationwide.`
   },
 
   categories: {
@@ -57,7 +57,7 @@ export const siteCopy = {
     eyebrow: `About ${SITE_NAME}`,
     title: 'Built for the way you move.',
     paragraphs: [
-      `${SITE_NAME} is a footwear destination for every step. We bring together lifestyle, running, court and everyday pairs, chosen for how they look and how you live in them.`
+      `${SITE_NAME} is a ${SITE_COLLECTION} destination for every step. We bring together lifestyle, running, court and everyday pairs, chosen for how they look and how you live in them.`
     ]
   }
 }

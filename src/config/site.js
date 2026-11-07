@@ -5,12 +5,15 @@
 // would reset every visitor's saved theme), package.json "name", and the repo name.
 
 export const SITE_NAME = 'Shooniverse'
-export const SITE_TAGLINE = 'A sneaker destination for every step.'
-export const SITE_DESCRIPTION =
-  'Lifestyle, running, court and everyday sneakers, chosen for how they look and how you live in them.'
+
+// The brand's own word for its overall collection, used in shared copy such as
+// "All Shooz". Individual products keep ordinary words ("running shoe", "sneaker").
+export const SITE_COLLECTION = 'Shooz'
+export const SITE_TAGLINE = `A ${SITE_COLLECTION} destination for every step.`
+export const SITE_DESCRIPTION = `Lifestyle, running, court and everyday ${SITE_COLLECTION}, chosen for how they look and how you live in them.`
 
 // Title used on the homepage tab.
-export const SITE_HOME_TITLE = `${SITE_NAME} \u00b7 Premium sneakers`
+export const SITE_HOME_TITLE = `${SITE_NAME} \u00b7 Premium ${SITE_COLLECTION}`
 
 // Browser tab title for a page, e.g. pageTitle('Shop') -> "Shop · Shooniverse".
 export function pageTitle(title) {
