@@ -17,7 +17,7 @@ const homepageFiles = [
   'src/components/HeroSection.vue',
   'src/components/HeroOrbit.vue',
   'src/components/BrandLink.vue',
-  'src/components/HomeProductCard.vue',
+  'src/components/ProductCard.vue',
   'src/components/FeaturedProducts.vue',
   'src/components/CategoriesSection.vue',
   'src/components/FeaturesSection.vue',
@@ -32,7 +32,7 @@ test('hero is the flagship: the first new and featured product in catalogue orde
   assert.equal(content.hero.slug, 'meridian-01')
 })
 
-test('product grid: real catalogue products only, hero excluded, featured first, at most 8', () => {
+test('product grid: one real product per category, hero excluded, at most 8', () => {
   const ids = new Set(products.map((p) => p.id))
   assert.ok(content.showcase.length > 0 && content.showcase.length <= 8)
   for (const p of content.showcase) {
@@ -40,8 +40,17 @@ test('product grid: real catalogue products only, hero excluded, featured first,
     assert.notEqual(p.id, content.hero.id)
   }
   assert.equal(new Set(content.showcase.map((p) => p.id)).size, content.showcase.length)
-  const firstNonFeatured = content.showcase.findIndex((p) => !p.isFeatured)
-  if (firstNonFeatured >= 0) assert.ok(content.showcase.slice(firstNonFeatured).every((p) => !p.isFeatured))
+  // one from every category, so the first screen shows the whole range
+  assert.deepEqual(content.showcase.map((p) => p.category), CATEGORIES.map((c) => c.id))
+})
+
+test('category chips: each category lists exactly the products of that category', () => {
+  for (const c of CATEGORIES) {
+    const expected = products.filter((p) => p.category === c.id).map((p) => p.id)
+    assert.deepEqual(content.showcaseByCategory[c.id].map((p) => p.id), expected, c.id)
+  }
+  const total = Object.values(content.showcaseByCategory).reduce((n, list) => n + list.length, 0)
+  assert.equal(total, products.length)
 })
 
 test('every category has a card with a description, a count and a product from that category', () => {
@@ -97,7 +106,7 @@ test('homepage components make no external requests and use no inline styles or 
 })
 
 test('homepage links are built by the shared location helpers; cards link to product detail pages', () => {
-  assert.match(read('src/components/HomeProductCard.vue'), /productLocation\(product\)/)
+  assert.match(read('src/components/ProductCard.vue'), /productLocation\(product\)/)
   assert.match(read('src/components/HeroOrbit.vue'), /productLocation\(product\)/)
   assert.match(read('src/components/HeroSection.vue'), /homeSectionLocation\('categories'\)/)
   assert.match(read('src/components/CategoriesSection.vue'), /shopLocation\(\{ category: category\.id \}\)/)

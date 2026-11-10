@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Cove Slide · Black · angle">
+<rect width="1200" height="900" fill="#EDEAE3"/>
+<g transform="translate(150 200) rotate(-10 200 100) scale(2.4)" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M122 154C126 112 150 96 206 96C262 96 286 118 292 154L264 154C260 130 244 122 206 122C170 122 156 132 150 154Z" fill="#1A1A1A"/>
+<path d="M24 170C20 162 28 156 44 154C120 146 300 146 366 154C386 157 390 168 376 174C300 184 110 186 40 180C30 179 26 175 24 170Z" fill="#F7F5F0"/>
+</g>
+</svg>

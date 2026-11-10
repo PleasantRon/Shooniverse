@@ -21,12 +21,10 @@ test('products have unique ids and slugs and valid prices', () => {
   for (const p of products) assert.ok(Number.isInteger(p.price) && p.price > 0, p.name)
 })
 
-test('catalogue is sneakers only (no heels or boots)', () => {
+test('every product belongs to a defined category, and every category has products', () => {
   const allowed = new Set(CATEGORIES.map((c) => c.id))
-  for (const p of products) {
-    assert.ok(allowed.has(p.category), `${p.name}: ${p.category}`)
-    assert.doesNotMatch(`${p.name} ${p.slug} ${p.shortDescription}`, /heel|boot/i)
-  }
+  for (const p of products) assert.ok(allowed.has(p.category), `${p.name}: ${p.category}`)
+  for (const id of allowed) assert.ok(products.some((p) => p.category === id), `no products in ${id}`)
 })
 
 test('every variant covers EU 40-45 with non-negative whole-number stock', () => {

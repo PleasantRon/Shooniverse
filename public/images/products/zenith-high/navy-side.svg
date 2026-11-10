@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Zenith High · Navy · side">
+<rect width="1200" height="900" fill="#EDEAE3"/>
+<g transform="translate(100 230) scale(2.5)" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M22 150C20 98 30 64 52 50L96 46C106 54 116 66 132 74C176 86 232 94 290 112C346 126 382 138 386 155V165H22Z" fill="#1F2A44"/>
+<path d="M14 165H392V184Q392 192 382 192H24Q14 192 14 184Z" fill="#F7F5F0"/>
+<path d="M52 50C60 64 76 74 96 76" fill="none"/>
+<path d="M150 82L158 100M176 88L184 106M204 94L212 112" fill="none"/>
+<path d="M28 84L106 88" fill="none"/>
+</g>
+</svg>

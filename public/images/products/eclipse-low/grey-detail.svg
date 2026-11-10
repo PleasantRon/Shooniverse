@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Eclipse Low · Grey · detail">
+<rect width="1200" height="900" fill="#EDEAE3"/>
+<g transform="translate(-550 -150) scale(5)" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M22 150C20 126 30 114 52 110L120 104C146 102 160 112 186 118C232 126 312 122 358 138C382 146 388 158 380 165H22Z" fill="#8A8780"/>
+<path d="M14 165H392V184Q392 192 382 192H24Q14 192 14 184Z" fill="#F7F5F0"/>
+<path d="M120 104C132 112 146 120 168 124" fill="none"/>
+<path d="M150 104L162 118M170 108L182 122M190 112L202 126" fill="none"/>
+<path d="M300 124C320 128 340 136 352 150" fill="none"/>
+</g>
+</svg>

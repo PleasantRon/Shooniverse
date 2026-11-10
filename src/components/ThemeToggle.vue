@@ -43,6 +43,13 @@ const isDark = computed(() => theme.value === 'dark')
   background: var(--panel);
 }
 
+@media (max-width: 360px) {
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+  }
+}
+
 .theme-toggle svg {
   fill: none;
   stroke: currentColor;

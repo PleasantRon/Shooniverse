@@ -28,7 +28,8 @@ test('every referenced product image exists and is a lettering-free SVG', () => 
     assert.doesNotMatch(svg, /<text[\s>]/i, `${path} draws text`)
     assert.doesNotMatch(svg, /placeholder/i, `${path} mentions placeholder`)
   }
-  assert.equal(paths.size, 60)
+  // three views for every colourway of every product
+  assert.equal(paths.size, products.reduce((n, p) => n + p.variants.length * 3, 0))
 })
 
 test('no stray SVG files: every file on disk is referenced by the product data', () => {

@@ -13,7 +13,7 @@ const product = computed(() => getProductBySlug(props.slug))
 </script>
 
 <template>
-  <div class="page">
+  <div class="sv-container product-page">
     <!-- key makes the details reset when moving from one product to another -->
     <ProductDetails v-if="product" :key="product.slug" :product="product" />
     <NotFoundState
@@ -25,10 +25,13 @@ const product = computed(() => getProductBySlug(props.slug))
 </template>
 
 <style scoped>
-.page {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
+.product-page {
+  padding-block: 32px 88px;
+}
+
+@media (max-width: 640px) {
+  .product-page {
+    padding-block: 20px 56px;
+  }
 }
 </style>

@@ -4,22 +4,26 @@ import { CATEGORIES } from '../data/constants.js'
 import { siteCopy } from '../data/siteCopy.js'
 import { SITE_COLLECTION } from '../config/site.js'
 import { shopLocation } from '../router/locations.js'
-import HomeProductCard from './HomeProductCard.vue'
+import ProductCard from './ProductCard.vue'
 
 const props = defineProps({
-  products: { type: Array, required: true }
+  // the "All" view: a selection from every category
+  products: { type: Array, required: true },
+  // every product, grouped by category id: { running: [...], boots: [...] }
+  byCategory: { type: Object, default: () => ({}) }
 })
 
 const selected = ref('all')
 
-// "All" plus one chip for each category that has products in this grid.
+// "All" plus one chip for each category that has products.
 const chips = computed(() => [
   { id: 'all', label: 'All' },
-  ...CATEGORIES.filter((c) => props.products.some((p) => p.category === c.id))
+  ...CATEGORIES.filter((c) => (props.byCategory[c.id] ?? []).length > 0)
 ])
 
+// A category chip shows everything in that category.
 const visible = computed(() =>
-  selected.value === 'all' ? props.products : props.products.filter((p) => p.category === selected.value)
+  selected.value === 'all' ? props.products : (props.byCategory[selected.value] ?? [])
 )
 
 const status = computed(() => `Showing ${visible.value.length} ${visible.value.length === 1 ? 'pair' : 'pairs'}`)
@@ -38,7 +42,7 @@ const status = computed(() => `Showing ${visible.value.length} ${visible.value.l
             v-for="chip in chips"
             :key="chip.id"
             type="button"
-            class="chip"
+            class="sv-chip"
             :aria-pressed="selected === chip.id"
             @click="selected = chip.id"
           >
@@ -51,7 +55,7 @@ const status = computed(() => `Showing ${visible.value.length} ${visible.value.l
 
       <ul class="grid">
         <li v-for="product in visible" :key="product.id">
-          <HomeProductCard :product="product" />
+          <ProductCard :product="product" />
         </li>
       </ul>
 
@@ -88,27 +92,6 @@ const status = computed(() => `Showing ${visible.value.length} ${visible.value.l
   gap: 8px;
 }
 
-.chip {
-  min-height: 44px;
-  padding: 0 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.chip:hover {
-  border-color: var(--text);
-}
-
-.chip[aria-pressed='true'] {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--accent-text);
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -140,6 +123,29 @@ const status = computed(() => `Showing ${visible.value.length} ${visible.value.l
 @media (max-width: 480px) {
   .featured {
     padding: 48px 0;
+  }
+
+  .chips {
+    flex-wrap: nowrap;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 2px var(--gutter) 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chips .sv-chip {
+    flex: none;
+  }
+}
+
+/* very small phones: one column rather than squeezing two */
+@media (max-width: 319px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 </style>

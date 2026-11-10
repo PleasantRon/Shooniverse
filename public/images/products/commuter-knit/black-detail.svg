@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Commuter Knit · Black · detail">
+<rect width="1200" height="900" fill="#EDEAE3"/>
+<g transform="translate(-550 -150) scale(5)" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M24 148C22 118 34 104 62 100C96 96 120 82 150 84C184 86 210 104 252 112C310 122 368 130 384 150V165H24Z" fill="#1A1A1A"/>
+<path d="M14 165H392V190Q392 196 384 196H24Q14 196 14 190Z" fill="#F7F5F0"/>
+<path d="M150 84C160 96 172 106 190 112" fill="none"/>
+<path d="M62 100C80 108 100 112 120 112" fill="none"/>
+</g>
+</svg>

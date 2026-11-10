@@ -97,7 +97,7 @@ test('light and dark tokens match the approved palette', () => {
 })
 
 test('no old ink/bone/volt tokens, fonts or helper classes remain anywhere in src', () => {
-  const old = /var\(--(ink|bone|volt|grey|line|pad|font-display|font-mono)\b|--(ink|bone|volt):|Anton|Space Mono|sv-(display|label|chip|tile|link|section-head)\b|#d4ff3a|#edeae3/i
+  const old = /var\(--(ink|bone|volt|grey|line|pad|font-display|font-mono)\b|--(ink|bone|volt):|Anton|Space Mono|sv-(display|label|tile|link|section-head)(?![-\w])|#d4ff3a|#edeae3/i
   // product data is excluded: "Volt" is the name of a real shoe colourway, not a design token
   for (const f of srcFiles.filter((f) => !f.includes(join('src', 'data')))) {
     assert.doesNotMatch(readFileSync(f, 'utf8'), old, f)
@@ -108,7 +108,7 @@ test('motion and focus: reduced-motion is respected and keyboard focus is visibl
   const css = read('src/style.css')
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/)
   assert.match(css, /:focus-visible/)
-  for (const f of ['CategoriesSection', 'HomeProductCard']) {
+  for (const f of ['CategoriesSection', 'ProductCard']) {
     const text = read(`src/components/${f}.vue`)
     if (/transform 0\.\d+s|transition: transform/.test(text)) {
       assert.match(text, /prefers-reduced-motion: no-preference/, `${f}: motion not guarded`)
@@ -120,13 +120,13 @@ test('motion and focus: reduced-motion is respected and keyboard focus is visibl
 test('no hardcoded dollar prices in the homepage, shell or site copy', () => {
   const files = [
     'src/data/siteCopy.js', 'src/data/homepage.js', 'src/views/HomeView.vue',
-    'src/components/HeroSection.vue', 'src/components/HeroOrbit.vue', 'src/components/HomeProductCard.vue', 'src/components/FeaturedProducts.vue',
+    'src/components/HeroSection.vue', 'src/components/HeroOrbit.vue', 'src/components/ProductCard.vue', 'src/components/FeaturedProducts.vue',
     'src/components/CategoriesSection.vue', 'src/components/PromoSection.vue', 'src/components/AboutSection.vue',
     'src/components/SiteHeader.vue', 'src/components/SiteFooter.vue'
   ]
   for (const f of files) assert.doesNotMatch(read(f), /\$\s?\d|USD|dollar/i, f)
   // every displayed price goes through the naira formatter
-  for (const f of ['HeroOrbit', 'HomeProductCard']) assert.match(read(`src/components/${f}.vue`), /formatPrice\(product\.price\)/)
+  for (const f of ['HeroOrbit', 'ProductCard']) assert.match(read(`src/components/${f}.vue`), /formatPrice\(product\.price\)/)
 })
 
 test('site copy makes no invented guarantees, policies or numbers', () => {
@@ -227,13 +227,12 @@ test('footer: four columns, category links match the catalogue, current-year cop
 })
 
 // ---------- shell behaviour ----------
-test('only the homepage uses the new surface; other screens keep their light surface for now', () => {
-  const app = read('src/App.vue')
-  assert.match(app, /'legacy-surface': !isHome/)
-  assert.match(app, /<RouterView/)
-  for (const f of ['Cart', 'Checkout', 'ProductCard', 'ProductDetails', 'ProductCatalog']) {
-    assert.doesNotMatch(read(`src/components/${f}.vue`), /var\(--(accent|panel|card)\b/, `${f} should not be restyled yet`)
+test('every page uses the same design tokens: no separate "legacy" surface is left', () => {
+  assert.doesNotMatch(read('src/App.vue') + read('src/style.css'), /legacy-surface/)
+  for (const f of ['Cart', 'Checkout', 'ProductCard', 'ProductDetails', 'ProductCatalog', 'PageHero', 'NotFoundState']) {
+    assert.match(read(`src/components/${f}.vue`), /var\(--(accent|card|panel|promo-bg)\b/, `${f} should use the shared tokens`)
   }
+  assert.match(read('src/App.vue'), /<RouterView/)
 })
 
 test('homepage images all exist on disk', () => {

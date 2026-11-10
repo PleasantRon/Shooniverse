@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Sorrel Suede · Navy · detail">
+<rect width="1200" height="900" fill="#EDEAE3"/>
+<g transform="translate(-500 -280) scale(5)" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M28 152C26 128 34 114 54 110L112 106C140 104 160 110 188 118C232 130 302 128 352 142C380 150 392 160 380 165H28Z" fill="#1F2A44"/>
+<path d="M24 165H388V172Q388 177 380 177H120V187H40V177H24Z" fill="#F7F5F0"/>
+<path d="M142 106C152 114 158 126 158 142" fill="none"/>
+<path d="M176 112C184 120 188 130 188 144" fill="none"/>
+<path d="M150 126H182" fill="none"/>
+</g>
+</svg>

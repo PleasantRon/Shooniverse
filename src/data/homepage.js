@@ -43,17 +43,26 @@ export function getHomepageContent() {
   const hero =
     products.find((p) => p.isNew && p.isFeatured) ?? getFeatured()[0] ?? products[0] ?? null
 
-  // Product grid: featured products first, then the rest, without the hero.
-  const others = products.filter((p) => p.id !== hero?.id)
-  const showcase = [...others.filter((p) => p.isFeatured), ...others.filter((p) => !p.isFeatured)].slice(
-    0,
-    SHOWCASE_SIZE
+  // Product grid ("All" view): one product from every category, so the first screen shows the
+  // whole range. Preferred: featured, then new, then catalogue order. The hero is not repeated.
+  const pickForCategory = (categoryId) => {
+    const inCategory = products.filter((p) => p.category === categoryId && p.id !== hero?.id)
+    return inCategory.find((p) => p.isFeatured) ?? inCategory.find((p) => p.isNew) ?? inCategory[0] ?? null
+  }
+  const showcase = CATEGORIES.map((c) => pickForCategory(c.id)).filter(Boolean).slice(0, SHOWCASE_SIZE)
+
+  // Choosing a category chip shows every product in that category.
+  const showcaseByCategory = Object.fromEntries(
+    CATEGORIES.map((c) => [c.id, products.filter((p) => p.category === c.id)])
   )
 
-  // One card per category with its description, pair count and a representative product.
+  // One card per category with its description, pair count and a representative product
+  // (not the hero, and not the one already shown in the grid, so images are not repeated).
+  const shown = new Set([hero?.id, ...showcase.map((p) => p.id)])
   const categories = CATEGORIES.map((category) => {
     const inCategory = products.filter((p) => p.category === category.id)
-    const product = inCategory.find((p) => p.id !== hero?.id) ?? inCategory[0] ?? null
+    const product =
+      inCategory.find((p) => !shown.has(p.id)) ?? inCategory.find((p) => p.id !== hero?.id) ?? inCategory[0] ?? null
     return {
       ...category,
       description: siteCopy.categories.descriptions[category.id],
@@ -82,5 +91,5 @@ export function getHomepageContent() {
   const heroVariant = hero ? (hero.variants.find((v) => v.images.card === hero.image) ?? hero.variants[0]) : null
   const heroOrbit = hero ? pickOrbitShoes(hero) : []
 
-  return { hero, heroVariant, heroOrbit, showcase, categories, drop, stats }
+  return { hero, heroVariant, heroOrbit, showcase, showcaseByCategory, categories, drop, stats }
 }

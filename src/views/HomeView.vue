@@ -8,7 +8,7 @@ import PromoSection from '../components/PromoSection.vue'
 import AboutSection from '../components/AboutSection.vue'
 
 // What to show is decided in src/data/homepage.js from the existing product data.
-const { hero, heroVariant, heroOrbit, showcase, categories, drop, stats } = getHomepageContent()
+const { hero, heroVariant, heroOrbit, showcase, showcaseByCategory, categories, drop, stats } = getHomepageContent()
 
 const eyebrow = drop ? `${drop.label} · New arrivals` : 'New arrivals'
 const newArrivalsLocation = drop ? shopLocation({ collection: drop.id }) : shopLocation()
@@ -24,7 +24,7 @@ const newArrivalsLocation = drop ? shopLocation({ collection: drop.id }) : shopL
       :new-arrivals-location="newArrivalsLocation"
     />
     <CategoriesSection :categories="categories" />
-    <FeaturedProducts v-if="showcase.length" :products="showcase" />
+    <FeaturedProducts v-if="showcase.length" :products="showcase" :by-category="showcaseByCategory" />
     <PromoSection :drop-label="drop ? drop.label : ''" :new-arrivals-location="newArrivalsLocation" />
     <AboutSection :stats="stats" />
   </div>

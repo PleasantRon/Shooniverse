@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Ridge Hiker · Olive · side">
+<rect width="1200" height="900" fill="#EDEAE3"/>
+<g transform="translate(100 230) scale(2.5)" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M54 165L50 52C50 44 56 40 64 40L140 40C150 40 156 46 158 56L166 80C190 92 236 98 290 108C340 118 374 130 380 150C384 160 382 165 376 165Z" fill="#5B6B45"/>
+<path d="M46 165H388V184Q388 192 376 192H62Q50 192 46 184Z" fill="#F7F5F0"/>
+<path d="M60 46H150" fill="none"/>
+<path d="M150 66L176 74M156 78L182 86M164 90L192 96M176 98L206 102" fill="none"/>
+<path d="M296 112C326 120 350 132 364 150" fill="none"/>
+</g>
+</svg>

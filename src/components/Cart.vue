@@ -4,6 +4,10 @@ import { cart } from '../store.js'
 import { useRouter } from 'vue-router'
 // bring computed for calculating total price
 import { computed } from 'vue'
+import { formatPrice } from '../utils/format.js'
+import { productLocation, shopLocation } from '../router/locations.js'
+import PageHero from './PageHero.vue'
+import OrbitBackdrop from './OrbitBackdrop.vue'
 
 const router = useRouter()
 
@@ -17,11 +21,16 @@ const handleRemove = (lineId) => {
   cart.removeFromCart(lineId)
 }
 
-// tells store to update quantity of a specific item in the cart. It finds the item by its productId and updates its quantity but only if the new quantity is greater than 0.
-const handleQuantityChange = (lineId, event) => {
-  const quantity = parseInt(event.target.value)
-  cart.updateQuantity(lineId, quantity)
+// tells store to change the quantity of one cart line by +1 or -1. The store keeps it between 1 and
+// what is in stock (and never above the per-line limit), so the buttons cannot overshoot.
+const changeQuantity = (item, step) => {
+  cart.updateQuantity(item.lineId, item.quantity + step)
 }
+
+const itemCountText = computed(() => {
+  const n = cart.getItemCount()
+  return n === 0 ? 'Nothing in your cart yet.' : `${n} ${n === 1 ? 'item' : 'items'} ready for checkout.`
+})
 
 // goes to the checkout page when user clicks proceed to checkout. if empty it displays the alert
 const handleCheckout = () => {
@@ -33,272 +42,348 @@ const handleCheckout = () => {
   router.push({ name: 'checkout' })
 }
 </script>
-
 <template>
-  <div class="cart-container">
-    <h2>Shopping Cart</h2>
-    
-    <div v-if="cart.items.length === 0" class="empty-cart">
-      <p>Your cart is empty</p>
-      <p class="empty-message">Start shopping to add items to your cart</p>
-      <RouterLink :to="{ name: 'shop' }" class="empty-link">Browse the shop</RouterLink>
-    </div>
+  <div class="cart">
+    <PageHero eyebrow="Cart" title="Shopping Cart" :text="itemCountText" />
 
-    <div v-else class="cart-content">
-      <div class="cart-items">
-        <div v-for="item in cart.items" :key="item.lineId" class="cart-item">
-          <div class="item-image">
-            <img :src="item.image" :alt="item.name" />
-          </div>
-          <div class="item-details">
-            <h3>{{ item.name }}</h3>
-            <p class="item-variant">{{ item.colourName }} · EU {{ item.size }}</p>
-            <p class="item-price">₦{{ item.price.toFixed(2) }}</p>
-          </div>
-          <div class="item-quantity">
-            <label>Qty:</label>
-            <select :value="item.quantity" @change="handleQuantityChange(item.lineId, $event)">
-              <option v-for="n in cart.getMaxQuantity(item)" :key="n" :value="n">{{ n }}</option>
-            </select>
-          </div>
-          <div class="item-subtotal">
-            <p>₦{{ (item.price * item.quantity).toFixed(2) }}</p>
-          </div>
-          <button @click="handleRemove(item.lineId)" class="remove-btn">Remove</button>
+    <div class="sv-container cart-body">
+      <div v-if="cart.items.length === 0" class="empty-cart">
+        <OrbitBackdrop variant="center" tone="light" />
+        <div class="empty-inner">
+          <h2>Your cart is empty</h2>
+          <p class="empty-message">Start shopping to add items to your cart</p>
+          <RouterLink :to="shopLocation()" class="sv-btn sv-btn--primary">Browse the shop</RouterLink>
         </div>
       </div>
 
-      <div class="cart-summary">
-        <h3>Order Summary</h3>
-        <div class="summary-row">
-          <span>Subtotal:</span>
-          <span>₦{{ subtotal.toFixed(2) }}</span>
-        </div>
-        <div class="summary-row">
-          <span>Tax (10%):</span>
-          <span>₦{{ tax.toFixed(2) }}</span>
-        </div>
-        <div class="summary-row shipping">
-          <span>Shipping:</span>
-          <span>Free</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total:</span>
-          <span>₦{{ total.toFixed(2) }}</span>
-        </div>
-        <button @click="handleCheckout" class="checkout-btn">Proceed to Checkout</button>
+      <div v-else class="cart-content">
+        <ul class="lines">
+          <li v-for="item in cart.items" :key="item.lineId" class="line">
+            <RouterLink :to="productLocation(item)" class="line-media" :aria-label="`View ${item.name}`">
+              <img :src="item.image" :alt="item.name" />
+            </RouterLink>
+
+            <div class="line-main">
+              <h3 class="line-name">
+                <RouterLink :to="productLocation(item)">{{ item.name }}</RouterLink>
+              </h3>
+              <p class="line-variant">{{ item.colourName }} · EU {{ item.size }}</p>
+              <p class="line-unit">{{ formatPrice(item.price) }} each</p>
+              <button type="button" class="sv-btn sv-btn--quiet line-remove" :aria-label="`Remove ${item.name} from cart`" @click="handleRemove(item.lineId)">
+                Remove
+              </button>
+            </div>
+
+            <div class="line-foot">
+              <div class="qty" role="group" :aria-label="`Quantity for ${item.name}`">
+                <button type="button" class="qty-btn" aria-label="Decrease quantity" :disabled="item.quantity <= 1" @click="changeQuantity(item, -1)">&minus;</button>
+                <output class="qty-value" aria-live="polite">{{ item.quantity }}</output>
+                <button type="button" class="qty-btn" aria-label="Increase quantity" :disabled="item.quantity >= cart.getMaxQuantity(item)" @click="changeQuantity(item, 1)">+</button>
+              </div>
+              <p class="line-total">{{ formatPrice(item.price * item.quantity) }}</p>
+            </div>
+          </li>
+        </ul>
+
+        <aside class="summary" aria-labelledby="summary-title">
+          <h2 id="summary-title" class="summary-title">Order Summary</h2>
+          <dl class="summary-rows">
+            <div class="summary-row">
+              <dt>Subtotal</dt>
+              <dd>{{ formatPrice(subtotal) }}</dd>
+            </div>
+            <div class="summary-row">
+              <dt>Tax (10%)</dt>
+              <dd>{{ formatPrice(tax) }}</dd>
+            </div>
+            <div class="summary-row">
+              <dt>Shipping</dt>
+              <dd>Free</dd>
+            </div>
+            <div class="summary-row total">
+              <dt>Total</dt>
+              <dd>{{ formatPrice(total) }}</dd>
+            </div>
+          </dl>
+          <button type="button" class="sv-btn sv-btn--primary checkout-btn" @click="handleCheckout">Proceed to Checkout</button>
+          <RouterLink :to="shopLocation()" class="continue">Continue shopping</RouterLink>
+        </aside>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.cart-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
-
-.cart-container h2 {
-  margin: 0 0 30px 0;
-  color: #2c3e50;
+.cart-body {
+  padding-block: 40px 88px;
 }
 
 .empty-cart {
+  position: relative;
+  overflow: hidden;
+  padding: 80px 20px;
+  border-radius: var(--radius-xl);
+  background: var(--card);
   text-align: center;
-  padding: 60px 20px;
 }
 
-.empty-cart p {
-  margin: 0;
-  color: #666;
-  font-size: 18px;
+.empty-inner {
+  position: relative;
+}
+
+.empty-inner h2 {
+  margin: 0 0 8px 0;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
 }
 
 .empty-message {
-  color: #999;
-  font-size: 14px;
-  margin-top: 10px;
+  margin: 0 0 24px 0;
+  color: var(--muted);
+  font-size: 17px;
 }
 
 .cart-content {
   display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 30px;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 32px;
+  align-items: start;
 }
 
-.cart-items {
+.lines {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.cart-item {
+.line {
   display: grid;
-  grid-template-columns: 80px 1fr 80px 100px 80px;
-  gap: 16px;
+  grid-template-columns: 112px minmax(0, 1fr) auto auto;
+  grid-template-areas: 'media main qty total';
   align-items: center;
+  gap: 8px 20px;
   padding: 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background: white;
+  border-radius: var(--radius-lg);
+  background: var(--card);
 }
 
-.item-image {
-  width: 80px;
-  height: 80px;
+/* the foot row (quantity + total) sits in the grid on wide screens */
+.line-foot {
+  display: contents;
+}
+
+.line-media {
+  grid-area: media;
+  display: block;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
+  background: var(--panel);
 }
 
-.item-image img {
+.line-media img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.item-details h3 {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  color: #333;
+.line-main {
+  grid-area: main;
+  min-width: 0;
 }
 
-.item-price {
+.line-name {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.line-name a {
+  color: var(--text);
+}
+
+.line-variant,
+.line-unit {
   margin: 0;
-  color: #42b983;
-  font-weight: bold;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-.item-quantity {
-  display: flex;
-  flex-direction: column;
+.line-remove {
+  margin: 6px 0 0 -12px;
+  min-height: 40px;
+  font-size: 14px;
+}
+
+.qty {
+  grid-area: qty;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
 }
 
-.item-quantity label {
-  font-size: 12px;
-  color: #666;
+.qty-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.item-quantity select {
-  padding: 4px 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
+.qty-btn:hover:not(:disabled) {
+  background: var(--panel);
 }
 
-.item-subtotal {
+.qty-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.qty-value {
+  min-width: 28px;
   text-align: center;
+  font-weight: 800;
 }
 
-.item-subtotal p {
+.line-total {
+  grid-area: total;
+  min-width: 110px;
   margin: 0;
-  font-weight: bold;
-  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 800;
+  text-align: right;
 }
 
-.remove-btn {
-  padding: 6px 12px;
-  background: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-  transition: background 0.2s;
-}
-
-.remove-btn:hover {
-  background: #c0392b;
-}
-
-.cart-summary {
-  background: #f9f9f9;
-  padding: 24px;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  height: fit-content;
+.summary {
   position: sticky;
-  top: 20px;
+  top: 96px;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  background: var(--card);
 }
 
-.cart-summary h3 {
+.summary-title {
   margin: 0 0 20px 0;
-  color: #2c3e50;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.summary-rows {
+  margin: 0 0 24px 0;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
-  font-size: 14px;
-  color: #666;
+  gap: 16px;
+  padding: 8px 0;
+  color: var(--muted);
 }
 
-.summary-row.shipping {
-  padding-bottom: 12px;
-  border-bottom: 1px solid #ddd;
+.summary-row dd {
+  margin: 0;
+  color: var(--text);
+  font-weight: 700;
 }
 
 .summary-row.total {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 2px solid #ddd;
-  font-size: 16px;
-  font-weight: bold;
-  color: #2c3e50;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.summary-row.total dd {
+  color: var(--accent);
+  font-weight: 900;
 }
 
 .checkout-btn {
   width: 100%;
-  margin-top: 20px;
-  padding: 12px;
-  background: #42b983;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
+  min-height: 56px;
+  font-size: 16px;
 }
 
-.checkout-btn:hover {
-  background: #359268;
+.continue {
+  display: block;
+  margin-top: 16px;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
 }
 
-@media (max-width: 768px) {
+.continue:hover {
+  color: var(--text);
+}
+
+@media (max-width: 960px) {
   .cart-content {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .cart-item {
-    grid-template-columns: 60px 1fr 50px;
-    gap: 12px;
-  }
-
-  .item-subtotal,
-  .remove-btn {
-    display: none;
-  }
-
-  .cart-summary {
+  .summary {
     position: static;
   }
 }
 
-.item-variant {
-  margin: 4px 0 0 0;
-  font-size: 14px;
-  color: #666;
-}
+/* phones: picture and details side by side, quantity and total on their own row */
+@media (max-width: 640px) {
+  .cart-body {
+    padding-block: 24px 56px;
+  }
 
-.empty-link {
-  display: inline-block;
-  margin-top: 16px;
-  color: #42b983;
-  font-weight: 600;
+  .line {
+    grid-template-columns: 92px minmax(0, 1fr);
+    grid-template-areas: 'media main';
+    gap: 12px 14px;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    align-items: start;
+  }
+
+  .line-foot {
+    display: flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .line-name {
+    font-size: 16px;
+  }
+
+  .line-total {
+    min-width: 0;
+    font-size: 17px;
+  }
+
+  .summary {
+    padding: 22px 18px;
+  }
+
+  .empty-cart {
+    padding: 56px 20px;
+    border-radius: var(--radius-lg);
+  }
 }
 </style>

@@ -20,6 +20,9 @@
   --promo-border: #2a2d36;
   --promo-accent: #8f9bff; /* readable accent on the dark band */
 
+  /* the one semantic colour besides the brand palette: errors and low stock */
+  --danger: #b42318;
+
   --shadow: 0 12px 32px rgba(16, 17, 20, 0.1);
   --radius-sm: 12px;
   --radius-md: 20px;
@@ -44,6 +47,7 @@
   --promo-bg: #1b1d24;
   --promo-card: #15171c;
   --promo-accent: #6b7aff;
+  --danger: #ff8f85;
 
   --shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
@@ -97,21 +101,16 @@ textarea {
   outline-offset: 3px;
 }
 
-/* The shop, product, cart and checkout screens have not been redesigned yet.
-   They keep their original light styling in either theme until their phase. */
-.legacy-surface {
-  background: #f5f5f5;
-  color: #333;
-  color-scheme: light;
-  padding: 20px 0 40px;
+/* Each page fades in gently when it opens (the rule below switches this off for reduced motion). */
+.main-content > * {
+  animation: page-in 0.35s ease-out both;
 }
 
-.legacy-surface a {
-  color: #42b983;
-}
-
-.legacy-surface :focus-visible {
-  outline-color: #2c3e50;
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -236,4 +235,94 @@ textarea {
   :root {
     --gutter: 20px;
   }
+}
+
+/* Filter chips: buttons or links, one look. Selected = aria-pressed or aria-current. */
+.sv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sv-chip:hover {
+  border-color: var(--text);
+  text-decoration: none;
+}
+
+.sv-chip[aria-pressed='true'],
+.sv-chip[aria-current='page'] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.sv-chip-count {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+/* Quiet text-style button (Remove, Back) */
+.sv-btn--quiet {
+  min-height: 44px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.sv-btn--quiet:hover {
+  color: var(--text);
+  background: var(--panel);
+}
+
+.sv-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Form fields */
+.sv-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--text);
+  font-size: 16px; /* 16px stops iOS zooming in on focus */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sv-input::placeholder {
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.sv-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.sv-input:user-invalid {
+  border-color: var(--danger);
+}
+
+.sv-field-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
 }

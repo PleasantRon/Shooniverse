@@ -1,6 +1,7 @@
 <script setup>
 import { siteCopy } from '../data/siteCopy.js'
 import FeaturesSection from './FeaturesSection.vue'
+import OrbitBackdrop from './OrbitBackdrop.vue'
 import { shopLocation } from '../router/locations.js'
 
 defineProps({
@@ -13,8 +14,7 @@ defineProps({
   <section id="benefits" class="promo" aria-labelledby="promo-title">
     <div class="sv-container">
       <div class="band">
-        <span class="ring ring-a" aria-hidden="true"></span>
-        <span class="ring ring-b" aria-hidden="true"></span>
+        <OrbitBackdrop variant="corner" tone="dark" />
 
         <div class="band-copy">
           <p v-if="dropLabel" class="band-eyebrow">{{ dropLabel }}</p>
@@ -46,29 +46,6 @@ defineProps({
   border-radius: var(--radius-xl);
   background: var(--promo-bg);
   color: var(--promo-text);
-}
-
-.ring {
-  position: absolute;
-  border: 1px solid var(--promo-border);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.ring-a {
-  top: -220px;
-  right: -140px;
-  width: 560px;
-  height: 560px;
-}
-
-.ring-b {
-  top: -120px;
-  right: -40px;
-  width: 360px;
-  height: 360px;
-  border-color: var(--accent);
-  opacity: 0.6;
 }
 
 .band-copy {

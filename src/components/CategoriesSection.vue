@@ -94,9 +94,10 @@ defineProps({
 
 .card-name {
   padding: 0 8px;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.03em;
+  line-height: 1.15;
 }
 
 .card-text {
@@ -130,9 +131,11 @@ defineProps({
   }
 }
 
-@media (max-width: 1100px) {
+/* tablets and phones: two columns, with proportions that keep the cards compact */
+@media (max-width: 699px) {
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 }
 
@@ -141,6 +144,48 @@ defineProps({
     padding: 48px 0;
   }
 
+  .head {
+    margin-bottom: 28px;
+  }
+
+  .cards {
+    gap: 12px;
+  }
+
+  .card {
+    gap: 4px;
+    padding: 10px 10px 16px;
+    border-radius: var(--radius-md);
+  }
+
+  .card-media {
+    margin-bottom: 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .card-name {
+    padding: 0 4px;
+    font-size: 17px;
+  }
+
+  .card-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    padding: 0 4px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .card-meta {
+    padding: 10px 4px 0;
+    font-size: 13px;
+  }
+}
+
+/* very small phones: one column rather than squeezing two */
+@media (max-width: 319px) {
   .cards {
     grid-template-columns: minmax(0, 1fr);
   }

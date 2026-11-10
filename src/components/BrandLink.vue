@@ -33,4 +33,20 @@ defineProps({
   font-weight: 800;
   letter-spacing: -0.04em;
 }
+
+/* narrow phones: a slightly smaller logo and name so the header always fits */
+@media (max-width: 400px) {
+  .brand-link {
+    gap: 8px;
+  }
+
+  .brand-link :deep(.orbit-logo) {
+    width: 30px;
+    height: 30px;
+  }
+
+  .brand-word {
+    font-size: 19px;
+  }
+}
 </style>

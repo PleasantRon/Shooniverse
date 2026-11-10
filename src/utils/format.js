@@ -1,11 +1,12 @@
-// Formats a naira amount, e.g. 50000 -> "₦50,000".
-// Pass { decimals: 2 } to show kobo, e.g. "₦50,000.00".
-export function formatPrice(amount, { decimals = 0 } = {}) {
+// Formats a naira amount, e.g. 50000 -> "₦50,000". Whole amounts show no decimals;
+// an amount with kobo shows two (₦1,234.50). Pass { decimals: 2 } to always show kobo.
+export function formatPrice(amount, { decimals } = {}) {
   const n = Number(amount)
   const safe = Number.isFinite(n) ? n : 0
+  const places = decimals ?? (Number.isInteger(safe) ? 0 : 2)
   return '₦' + safe.toLocaleString('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
+    minimumFractionDigits: places,
+    maximumFractionDigits: places
   })
 }
 

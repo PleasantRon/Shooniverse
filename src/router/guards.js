@@ -24,9 +24,11 @@ export function routeTitle(to) {
 export const HEADER_OFFSET = 88
 
 // Back/forward restores the saved position, links like /#about scroll to the
-// section, everything else starts at the top.
+// section, changing only the filter on the same page (e.g. /shop?category=boots)
+// keeps the scroll position, everything else starts at the top.
 export function scrollBehavior(to, from, savedPosition, reduceMotion = prefersReducedMotion) {
   if (savedPosition) return savedPosition
+  if (to.name && to.name === from.name && to.path === from.path && !to.hash) return false
   if (to.hash) {
     return { el: to.hash, top: HEADER_OFFSET, behavior: reduceMotion() ? 'auto' : 'smooth' }
   }

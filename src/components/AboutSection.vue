@@ -1,6 +1,7 @@
 <script setup>
 import { siteCopy } from '../data/siteCopy.js'
 import { shopLocation } from '../router/locations.js'
+import OrbitBackdrop from './OrbitBackdrop.vue'
 
 defineProps({
   // { styles, categories, sizes } from the catalogue
@@ -10,6 +11,7 @@ defineProps({
 
 <template>
   <section id="about" class="about" aria-labelledby="about-title">
+    <OrbitBackdrop variant="corner" tone="light" />
     <div class="sv-container about-grid">
       <div class="about-intro">
         <p class="sv-eyebrow">{{ siteCopy.about.eyebrow }}</p>
@@ -42,10 +44,13 @@ defineProps({
 
 <style scoped>
 .about {
+  position: relative;
+  overflow: hidden;
   padding: 72px 0 96px;
 }
 
 .about-grid {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 56px;

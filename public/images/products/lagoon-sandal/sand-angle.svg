@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Lagoon Sandal · Sand · angle">
+<rect width="1200" height="900" fill="#EDEAE3"/>
+<g transform="translate(150 200) rotate(-10 200 100) scale(2.4)" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M32 154C30 112 56 84 92 80L100 100C78 106 62 124 62 154Z" fill="#CDBFA6"/>
+<path d="M150 154C150 118 176 104 214 104C252 104 276 120 280 154L254 154C250 134 238 128 214 128C190 128 178 136 176 154Z" fill="#CDBFA6"/>
+<path d="M24 170C20 162 28 156 44 154C120 146 300 146 366 154C386 157 390 168 376 174C300 184 110 186 40 180C30 179 26 175 24 170Z" fill="#F7F5F0"/>
+<path d="M74 98L90 112" fill="none"/>
+</g>
+</svg>

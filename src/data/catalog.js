@@ -49,3 +49,37 @@ export const getCategoryLabel = (product) =>
   CATEGORIES.find((c) => c.id === product.category)?.label ?? ''
 export const getCollectionLabel = (product) =>
   COLLECTIONS.find((c) => c.id === product.collection)?.label ?? ''
+
+// ---------- categories and filtering ----------
+export const getCategory = (id) => CATEGORIES.find((c) => c.id === id) ?? null
+export const isCategoryId = (id) => getCategory(id) !== null
+export const isCollectionId = (id) => COLLECTIONS.some((c) => c.id === id)
+
+// Filters a product list. `category` and `collection` are ids; a blank value means
+// "no filter". An id that does not exist matches nothing (it never falls back to everything).
+export function filterProducts(list, { category, collection } = {}) {
+  return list.filter(
+    (p) => (!category || p.category === category) && (!collection || p.collection === collection)
+  )
+}
+
+// How many products each category holds, e.g. { running: 4, boots: 4, ... }.
+export function countByCategory(list = products) {
+  return Object.fromEntries(CATEGORIES.map((c) => [c.id, list.filter((p) => p.category === c.id).length]))
+}
+
+// Reads the Shop page address (?category=...&collection=...) and returns what to show.
+// An id that does not exist shows nothing (unknown: true) rather than everything.
+export function resolveShopFilter(query = {}, list = products) {
+  const first = (value) => (Array.isArray(value) ? value[0] : value) ?? ''
+  const category = first(query.category)
+  const collection = first(query.collection)
+  const unknown =
+    (category !== '' && !isCategoryId(category)) || (collection !== '' && !isCollectionId(collection))
+  return {
+    category,
+    collection,
+    unknown,
+    products: unknown ? [] : filterProducts(list, { category, collection })
+  }
+}

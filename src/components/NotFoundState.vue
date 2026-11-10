@@ -1,4 +1,7 @@
 <script setup>
+import { shopLocation, homeLocation } from '../router/locations.js'
+import OrbitBackdrop from './OrbitBackdrop.vue'
+
 defineProps({
   title: { type: String, default: 'Page not found' },
   message: { type: String, default: "We couldn't find what you were looking for." }
@@ -7,55 +10,56 @@ defineProps({
 
 <template>
   <section class="not-found">
-    <h2>{{ title }}</h2>
-    <p>{{ message }}</p>
-    <div class="not-found-actions">
-      <RouterLink :to="{ name: 'shop' }" class="nf-btn">Back to the shop</RouterLink>
-      <RouterLink :to="{ name: 'home' }" class="nf-link">Go to the homepage</RouterLink>
+    <OrbitBackdrop variant="center" tone="light" />
+    <div class="not-found-inner">
+      <h1>{{ title }}</h1>
+      <p>{{ message }}</p>
+      <div class="not-found-actions">
+        <RouterLink :to="shopLocation()" class="sv-btn sv-btn--primary">Back to the shop</RouterLink>
+        <RouterLink :to="homeLocation()" class="sv-btn sv-btn--ghost">Go to the homepage</RouterLink>
+      </div>
     </div>
   </section>
 </template>
 
 <style scoped>
 .not-found {
+  position: relative;
+  overflow: hidden;
+  padding: 88px 20px;
+  border-radius: var(--radius-xl);
+  background: var(--card);
   text-align: center;
-  padding: 80px 20px;
 }
 
-.not-found h2 {
+.not-found-inner {
+  position: relative;
+}
+
+.not-found h1 {
   margin: 0 0 10px 0;
-  font-size: 32px;
-  color: #2c3e50;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
 }
 
 .not-found p {
-  margin: 0 0 24px 0;
-  color: #666;
+  margin: 0 0 28px 0;
+  color: var(--muted);
+  font-size: 17px;
 }
 
 .not-found-actions {
   display: flex;
-  gap: 16px;
-  justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
 }
 
-.nf-btn {
-  display: inline-block;
-  padding: 12px 24px;
-  background: #42b983;
-  color: white;
-  border-radius: 4px;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.nf-btn:hover {
-  background: #2c3e50;
-}
-
-.nf-link {
-  color: #2c3e50;
+@media (max-width: 480px) {
+  .not-found {
+    padding: 56px 20px;
+    border-radius: var(--radius-lg);
+  }
 }
 </style>

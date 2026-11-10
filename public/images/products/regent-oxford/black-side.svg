@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Regent Oxford · Black · side">
+<rect width="1200" height="900" fill="#EDEAE3"/>
+<g transform="translate(100 230) scale(2.5)" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M30 152C28 130 32 112 46 106L96 100C128 98 150 108 178 116C222 128 300 124 352 140C380 148 392 160 380 165H30Z" fill="#1A1A1A"/>
+<path d="M26 165H388V172Q388 177 380 177H122V187H40V177H26Z" fill="#F7F5F0"/>
+<path d="M110 100C140 104 160 112 178 118" fill="none"/>
+<path d="M122 106L132 118M140 110L150 122M158 114L168 126" fill="none"/>
+<path d="M300 126C318 130 336 138 346 150" fill="none"/>
+</g>
+</svg>

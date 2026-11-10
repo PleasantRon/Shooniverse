@@ -6,6 +6,10 @@
 
 export const SITE_NAME = 'Shooniverse'
 
+// The brand logo (also used as the browser-tab icon). To change the logo everywhere,
+// replace this file or point this path at a new one. It must be an SVG in /public.
+export const SITE_LOGO = '/brand/logo.svg'
+
 // The brand's own word for its overall collection, used in shared copy such as
 // "All Shooz". Individual products keep ordinary words ("running shoe", "sneaker").
 export const SITE_COLLECTION = 'Shooz'
@@ -23,11 +27,12 @@ export function pageTitle(title) {
 const escapeAttribute = (text) =>
   text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-// Fills the %SITE_NAME% and %SITE_DESCRIPTION% placeholders in index.html.
+// Fills the %SITE_NAME%, %SITE_DESCRIPTION% and %SITE_LOGO% placeholders in index.html.
 // Used by the small Vite plugin in vite.config.js, so the very first HTML the
 // browser receives already has the right title and description.
 export function applySiteMeta(html) {
   return html
     .replaceAll('%SITE_NAME%', escapeAttribute(SITE_NAME))
     .replaceAll('%SITE_DESCRIPTION%', escapeAttribute(SITE_DESCRIPTION))
+    .replaceAll('%SITE_LOGO%', escapeAttribute(SITE_LOGO))
 }

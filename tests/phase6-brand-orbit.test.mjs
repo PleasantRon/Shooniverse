@@ -205,25 +205,25 @@ test('category and collection names come from one shared lookup', () => {
   assert.equal(getCategoryLabel(meridian), 'Lifestyle')
   assert.equal(getCollectionLabel(meridian), 'Drop 07')
   assert.equal(getCategoryLabel({ category: 'nope' }), '')
-  for (const f of ['HomeProductCard', 'ProductDetails']) {
+  for (const f of ['ProductCard', 'ProductDetails']) {
     assert.doesNotMatch(read(`src/components/${f}.vue`), /CATEGORIES\.find|COLLECTIONS\.find/, f)
   }
 })
 
 test('product links in cards use the shared location helper', () => {
-  for (const f of ['HomeProductCard', 'HeroOrbit', 'ProductCard']) {
+  for (const f of ['ProductCard', 'HeroOrbit']) {
     const text = read(`src/components/${f}.vue`)
     assert.match(text, /productLocation\(/, f)
     assert.doesNotMatch(text, /name: 'product'/, f)
   }
 })
 
-test('cart, checkout and product data are unchanged apart from the brand name in one message', () => {
+test('cart and checkout behaviour is unchanged (their look was redesigned)', () => {
   const checkout = read('src/components/Checkout.vue')
   assert.match(checkout, /Demo checkout \u2014 no payment will be collected\./)
   assert.match(checkout, /router\.push\(\{ name: 'shop' \}\)/)
   assert.match(read('src/components/Cart.vue'), /router\.push\(\{ name: 'checkout' \}\)/)
-  assert.equal(products.length, 10)
+  assert.equal(products.length, 32)
 })
 
 function readFileText(path) {

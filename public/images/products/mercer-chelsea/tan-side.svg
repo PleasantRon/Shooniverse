@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Mercer Chelsea · Tan · side">
+<rect width="1200" height="900" fill="#EDEAE3"/>
+<g transform="translate(100 230) scale(2.5)" stroke="#111" stroke-width="3" stroke-linejoin="round">
+<path d="M56 165L52 40C52 33 57 30 64 30L148 30C156 30 160 35 162 43L170 74C190 90 232 98 288 108C338 118 372 130 380 150C384 160 382 165 376 165Z" fill="#B88A5A"/>
+<path d="M48 165H386V182Q386 190 376 190H66Q52 190 48 182Z" fill="#F7F5F0"/>
+<path d="M60 104C90 94 120 100 150 106" fill="none"/>
+<path d="M60 36L58 54M72 34L70 52" fill="none"/>
+<path d="M300 112C330 120 352 132 366 150" fill="none"/>
+</g>
+</svg>

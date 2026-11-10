@@ -50,10 +50,10 @@ test('hero, About, Shop heading, footer link and homepage button use Shooz', () 
     'Premium Shooz for every kind of move. Lifestyle, running, court and everyday styles, delivered nationwide.'
   )
   assert.match(siteCopy.about.paragraphs[0], /^Shooniverse is a Shooz destination for every step\./)
-  assert.match(read('src/views/ShopView.vue'), /:heading="`All \$\{SITE_COLLECTION\}`"/) // All Shooz
+  assert.match(read('src/views/ShopView.vue'), /`All \$\{SITE_COLLECTION\}`/) // All Shooz
   assert.match(read('src/components/SiteFooter.vue'), />All \{\{ SITE_COLLECTION \}\}<\/RouterLink>/) // All Shooz
   assert.match(read('src/components/FeaturedProducts.vue'), />View all \{\{ SITE_COLLECTION \}\}<\/RouterLink>/) // View all Shooz
-  assert.match(read('src/components/ProductCatalog.vue'), /premium \$\{SITE_COLLECTION\}/)
+  assert.match(read('src/components/ProductCatalog.vue'), /See all \{\{ SITE_COLLECTION \}\}/)
 })
 
 test('the word is spelled and capitalised consistently ("Shooz", never "shooz", "Shoez" or "Shoos")', () => {
@@ -107,13 +107,13 @@ test('"shoe(s)" remains only where it means one shoe, an order, or is a code com
 })
 
 // ---------- what must not change ----------
-test('product names, categories and product-specific wording are untouched', () => {
-  assert.deepEqual(
-    products.map((p) => p.name),
-    ['Classic Runner Pro', 'Apex Trail Runner', 'Comfort Casual Walk', 'Sprint Speed Racer', 'Meridian 01', 'Halo Low', 'Dusk Mid', 'Ring Road', 'Pavement 90', 'Kerb Runner']
-  )
-  assert.deepEqual(CATEGORIES.map((c) => c.label), ['Lifestyle', 'Running', 'Court', 'Everyday'])
-  assert.equal(products.filter((p) => /sneaker/i.test(p.longDescription)).length, 3) // genuine sneakers keep the word
+test('the original products and their wording are untouched; new products were added around them', () => {
+  const original = ['Classic Runner Pro', 'Apex Trail Runner', 'Comfort Casual Walk', 'Sprint Speed Racer', 'Meridian 01', 'Halo Low', 'Dusk Mid', 'Ring Road', 'Pavement 90', 'Kerb Runner']
+  assert.deepEqual(products.slice(0, 10).map((p) => p.name), original)
+  assert.equal(products.length, 32)
+  assert.deepEqual(CATEGORIES.map((c) => c.label), ['Lifestyle', 'Running', 'Basketball', 'Everyday', 'Formal', 'Loafers', 'Boots', 'Sandals & Slides'])
+  // descriptions of individual shoes that really are sneakers keep that word
+  assert.equal(products.slice(0, 10).filter((p) => /sneaker/i.test(p.longDescription)).length, 3)
   assert.ok(products.some((p) => /running shoe/i.test(p.shortDescription)))
   assert.ok(products.every((p) => !/Shooz/.test(`${p.name} ${p.shortDescription} ${p.longDescription}`)))
 })

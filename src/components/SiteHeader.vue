@@ -204,6 +204,24 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
   display: none;
 }
 
+@media (max-width: 400px) {
+  .header-inner {
+    gap: 8px;
+  }
+
+  .actions {
+    gap: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .icon-btn,
+  .menu-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+
 @media (max-width: 860px) {
   .menu-btn {
     display: inline-flex;

@@ -3,6 +3,9 @@ import { computed, ref } from 'vue'
 import { cart } from '../store.js'
 import { EU_SIZES } from '../data/constants.js'
 import { getVariant, getDefaultSelection, getCategoryLabel, getCollectionLabel } from '../data/catalog.js'
+import { formatPrice } from '../utils/format.js'
+import { shopLocation, cartLocation } from '../router/locations.js'
+import OrbitBackdrop from './OrbitBackdrop.vue'
 
 const props = defineProps({
   product: { type: Object, required: true }
@@ -67,15 +70,18 @@ const addToCart = () => {
 <template>
   <article class="details">
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <RouterLink :to="{ name: 'shop' }">Shop</RouterLink>
-      <span aria-hidden="true"> / </span>
-      <span>{{ product.name }}</span>
+      <RouterLink :to="shopLocation()">Shop</RouterLink>
+      <span aria-hidden="true">/</span>
+      <RouterLink :to="shopLocation({ category: product.category })">{{ categoryLabel }}</RouterLink>
+      <span aria-hidden="true">/</span>
+      <span class="breadcrumb-current">{{ product.name }}</span>
     </nav>
 
     <div class="details-grid">
       <div class="gallery">
-        <div class="main-image">
-          <img :src="mainImage" :alt="`${product.name} in ${variant.colourName}`" />
+        <div class="stage">
+          <OrbitBackdrop variant="center" tone="accent" />
+          <img class="stage-image" :src="mainImage" :alt="`${product.name} in ${variant.colourName}`" />
         </div>
         <div class="thumbs">
           <button
@@ -94,12 +100,12 @@ const addToCart = () => {
       </div>
 
       <div class="info">
-        <p class="eyebrow">
-          {{ categoryLabel }}<span v-if="collectionLabel"> · {{ collectionLabel }}</span>
+        <p class="sv-eyebrow">
+          {{ categoryLabel }}<template v-if="collectionLabel"> · {{ collectionLabel }}</template>
           <span v-if="product.isNew" class="badge">New</span>
         </p>
-        <h2 class="name">{{ product.name }}</h2>
-        <p class="price">₦{{ product.price.toFixed(2) }}</p>
+        <h1 class="name">{{ product.name }}</h1>
+        <p class="price">{{ formatPrice(product.price) }}</p>
         <p class="short">{{ product.shortDescription }}</p>
 
         <div class="option">
@@ -139,22 +145,22 @@ const addToCart = () => {
           <p class="stock" :class="{ low: size !== null && stockFor(size) <= 3 }">{{ stockText }}</p>
         </div>
 
-        <button type="button" class="add-btn" :disabled="!canAdd" @click="addToCart">
+        <button type="button" class="sv-btn sv-btn--primary add-btn" :disabled="!canAdd" @click="addToCart">
           Add to Cart
         </button>
         <p class="message" :class="message.type" role="status" aria-live="polite">
           {{ message.text }}
-          <RouterLink v-if="message.type === 'success'" :to="{ name: 'cart' }">View cart</RouterLink>
+          <RouterLink v-if="message.type === 'success'" :to="cartLocation()">View cart</RouterLink>
         </p>
 
         <div class="long">
-          <h3>About this shoe</h3>
+          <h2>About this shoe</h2>
           <p>{{ product.longDescription }}</p>
-          <h3>Materials</h3>
+          <h2>Materials</h2>
           <ul>
             <li v-for="m in product.materials" :key="m">{{ m }}</li>
           </ul>
-          <h3>Fit</h3>
+          <h2>Fit</h2>
           <p>{{ product.fit }}</p>
         </div>
       </div>
@@ -164,241 +170,274 @@ const addToCart = () => {
 
 <style scoped>
 .breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 24px;
+  color: var(--muted);
   font-size: 14px;
-  color: #666;
 }
 
 .breadcrumb a {
-  color: #42b983;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.breadcrumb a:hover {
+  color: var(--text);
+}
+
+.breadcrumb-current {
+  color: var(--text);
+  font-weight: 700;
 }
 
 .details-grid {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 40px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 48px;
   align-items: start;
 }
 
-.main-image {
-  background: #f5f5f5;
-  border-radius: 8px;
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 5 / 4;
+  padding: 8%;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
 }
 
-.main-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.stage-image {
+  position: relative;
   display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
 }
 
 .thumbs {
   display: flex;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .thumb {
-  width: 84px;
+  width: 88px;
   padding: 0;
-  border: 2px solid #e0e0e0;
-  border-radius: 6px;
-  background: #f5f5f5;
-  cursor: pointer;
   overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  cursor: pointer;
 }
 
 .thumb img {
-  width: 100%;
   display: block;
+  width: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: contain;
+  object-fit: cover;
+}
+
+.thumb:hover {
+  border-color: var(--border);
 }
 
 .thumb.selected {
-  border-color: #2c3e50;
+  border-color: var(--accent);
 }
 
-.eyebrow {
-  margin: 0 0 8px 0;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #666;
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
 }
 
 .badge {
-  margin-left: 8px;
-  padding: 2px 8px;
-  background: #2c3e50;
-  color: white;
-  border-radius: 3px;
+  margin-left: 4px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-text);
   font-size: 11px;
+  font-weight: 800;
 }
 
 .name {
-  margin: 0 0 8px 0;
-  font-size: 36px;
-  color: #2c3e50;
+  margin: 16px 0 6px 0;
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 1;
 }
 
 .price {
-  margin: 0 0 12px 0;
+  margin: 0 0 14px 0;
   font-size: 24px;
-  font-weight: 700;
-  color: #42b983;
+  font-weight: 800;
 }
 
 .short {
-  margin: 0 0 24px 0;
-  color: #444;
+  margin: 0 0 28px 0;
+  color: var(--muted);
+  font-size: 17px;
 }
 
 .option {
+  width: 100%;
   margin-bottom: 24px;
 }
 
 .option-label {
   margin: 0 0 10px 0;
   font-size: 14px;
-  color: #2c3e50;
 }
 
 .swatches,
 .sizes {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
 }
 
 .swatch {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--border);
   border-radius: 50%;
-  border: 2px solid #ccc;
   cursor: pointer;
-  outline-offset: 3px;
 }
 
 .swatch.selected {
-  border-color: #2c3e50;
-  box-shadow: 0 0 0 2px white, 0 0 0 4px #2c3e50;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
 }
 
 .size {
-  min-width: 52px;
-  min-height: 44px;
-  padding: 0 12px;
-  border: 2px solid #2c3e50;
-  background: white;
-  color: #2c3e50;
-  font-weight: 600;
-  border-radius: 4px;
-  cursor: pointer;
+  min-width: 56px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--text);
+  font-weight: 700;
 }
 
 .size:hover:not(:disabled) {
-  background: #f0f0f0;
+  border-color: var(--text);
 }
 
 .size.selected {
-  background: #2c3e50;
-  color: white;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
 }
 
 .size:disabled {
-  border-color: #ccc;
-  color: #767676;
-  background: #f5f5f5;
+  background: transparent;
+  color: var(--muted);
   text-decoration: line-through;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
 .stock {
   margin: 10px 0 0 0;
+  color: var(--muted);
   font-size: 14px;
-  color: #666;
 }
 
 .stock.low {
-  color: #b03a2e;
+  color: var(--danger);
+  font-weight: 700;
 }
 
 .add-btn {
   width: 100%;
-  min-height: 52px;
-  background: #42b983;
-  color: white;
-  border: none;
-  border-radius: 4px;
+  min-height: 56px;
   font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.add-btn:hover:not(:disabled) {
-  background: #2c3e50;
-}
-
-.add-btn:disabled {
-  background: #ccc;
-  color: #555;
-  cursor: not-allowed;
 }
 
 .message {
   min-height: 24px;
-  margin: 10px 0 0 0;
+  margin: 12px 0 0 0;
   font-size: 14px;
+  font-weight: 600;
 }
 
 .message.success {
-  color: #1e7e4f;
+  color: var(--accent);
 }
 
 .message.error {
-  color: #b03a2e;
+  color: var(--danger);
 }
 
 .message a {
   margin-left: 8px;
-  color: #2c3e50;
-  font-weight: 600;
+  font-weight: 800;
 }
 
 .long {
+  width: 100%;
   margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--card);
 }
 
-.long h3 {
-  margin: 16px 0 6px 0;
-  font-size: 15px;
-  color: #2c3e50;
+.long h2 {
+  margin: 20px 0 6px 0;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.long h2:first-child {
+  margin-top: 0;
 }
 
 .long p,
 .long ul {
   margin: 0;
-  color: #444;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .long ul {
   padding-left: 20px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .details-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stage {
+    border-radius: var(--radius-lg);
   }
 
-  .name {
-    font-size: 28px;
+  .thumb {
+    width: calc((100% - 24px) / 3);
+  }
+
+  .thumbs {
+    gap: 12px;
+  }
+
+  .long {
+    padding: 20px;
   }
 }
 </style>

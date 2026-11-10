@@ -4,12 +4,18 @@
 // EU sizes offered across the store.
 export const EU_SIZES = [40, 41, 42, 43, 44, 45]
 
-// Product categories. "court" covers basketball-inspired styles.
+// Product categories, in the order shown in menus and on the homepage.
+// "court" covers basketball and court styles. The wording shown to shoppers
+// (headings, descriptions) lives in data/siteCopy.js.
 export const CATEGORIES = [
   { id: 'lifestyle', label: 'Lifestyle' },
   { id: 'running', label: 'Running' },
-  { id: 'court', label: 'Court', note: 'Basketball-inspired' },
-  { id: 'everyday', label: 'Everyday' }
+  { id: 'court', label: 'Basketball', note: 'Basketball and court' },
+  { id: 'everyday', label: 'Everyday' },
+  { id: 'formal', label: 'Formal' },
+  { id: 'loafers', label: 'Loafers' },
+  { id: 'boots', label: 'Boots' },
+  { id: 'sandals', label: 'Sandals & Slides' }
 ]
 
 // Named collections / drops a product can belong to.
@@ -29,7 +35,10 @@ export const COLOURS = {
   olive: { name: 'Olive', swatch: '#5B6B45' },
   signal: { name: 'Signal Red', swatch: '#D7392B' },
   volt: { name: 'Volt', swatch: '#D4FF3A' },
-  bone: { name: 'Bone', swatch: '#E4DFD2' }
+  bone: { name: 'Bone', swatch: '#E4DFD2' },
+  brown: { name: 'Brown', swatch: '#6B4A33' },
+  tan: { name: 'Tan', swatch: '#B88A5A' },
+  burgundy: { name: 'Burgundy', swatch: '#5A1E2B' }
 }
 
 // Image conventions. Every colourway has the same three views, in this order.
